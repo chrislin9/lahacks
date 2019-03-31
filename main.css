@@ -18,7 +18,7 @@ html, body {
 #description {
   position: absolute;
   font-size: 16px;
-  top: 60%;
+  top: 67%;
   left: 13.5%;
 }
 /* The hero image */
@@ -54,6 +54,20 @@ html, body {
   position: absolute;
   top: 10px;
   left: 25%;
+  z-index: 4;
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #999;
+  text-align: center;
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}
+
+#floating-panel2 {
+  position: absolute;
+  top: 10px;
+  left: 10%;
   z-index: 4;
   background-color: #fff;
   padding: 5px;

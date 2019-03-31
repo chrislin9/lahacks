@@ -3,11 +3,21 @@
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <title>Travel Modes in Directions</title>
+    <title>SafeWalk</title>
     <link rel='stylesheet' href='main.css'/>
     <script type="text/javascript" src="crime.js"></script>
   </head>
   <body>
+    <video autoplay muted loop id="myVideo">
+      <source src="assets/videoplayback.mp4" type="video/mp4">
+    </video>
+    <div class="hero-image">
+      <div class="hero-text">
+        <h1>SafeWalk</h1>
+        <p id = "description">Finding the safest way home.</p>
+      </div>
+    </div>
+
     <div id="floating-panel">
     <b>Start: </b>
     <input id="start"type="text">
@@ -20,8 +30,16 @@
     <b>ECV: </b>
     <input id="ecv"type="text"readonly><br>
     </div>
+
     <div id="map"></div>
-    <div id="right-panel"></div>
+
+    <div id="right-panel"><h3>Directions</h3></div>
+    <!-- <script>
+      var vid = document.getElementById("myVideo");
+      vid.playbackRate = 1;
+    </script> -->
+
+
     <script>
       var crimePoints = [];
       var ecv = [];
@@ -71,6 +89,7 @@
         });
         document.getElementById('end').addEventListener('change', function() {
           calculateAndDisplayRoute(directionsService, directionsDisplay);
+          document.getElementById('right-panel').style.opacity = 1;
         });
       }
 

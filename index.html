@@ -26,6 +26,12 @@
         <option value="BICYCLING">Bicycling</option>
         <option value="TRANSIT">Transit</option>
       </select>
+      <b>Gender: </b>
+      <select id = "genderlist">
+        <option value = "0">Both</option>
+        <option value = "M">Male</option>
+        <option value = "F">Female</option>
+      </select><br>
       <b>Start: </b>
       <input id="start"type="text"><br>
       <b>End: </b>
@@ -72,8 +78,8 @@
         var directionsDisplay = new google.maps.DirectionsRenderer;
         var directionsService = new google.maps.DirectionsService;
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 14,
-          center: {lat: 34.0522, lng: -118.2437}
+          zoom: 13,
+          center: {lat: 34.0472, lng: -118.3370}
         });
         directionsDisplay.setMap(map);
 
@@ -107,6 +113,9 @@
         });
         document.getElementById('Time of Travel').addEventListener('change', function() {
           timeFilter();
+        });
+        document.getElementById('genderlist').addEventListener('change', function() {
+          genderdata();
         });
       }
 
@@ -159,6 +168,35 @@
             directionsDisplay.setDirections(response);
           }
         });
+      }
+
+      function genderdata() {
+
+        var heatmapdatapoints = []; //empty array to hold latlng points
+        var gender = document.getElementById("genderlist");
+        var gender2 = gender.options[gender.selectedIndex].value;
+        var counter = 0; //gender selected in dropdown
+
+        for (var i = 0; i < crimeJson.length; i++){ //for loop to loop through all crimes
+
+          var temp = crimeJson[i]["location_1"]["coordinates"]; //get location of a crime
+          var crime_gen = crimeJson[i]["vict_sex"]; //get sex of crime victim
+          console.log("Selected: " + gender2 + " crime: " + crime_gen);
+
+
+          if (gender2 === "0") { //gender is both
+            heatmapdatapoints[counter] = new google.maps.LatLng(temp[1], temp[0]);
+            counter += 1;
+          }
+
+          else if(crime_gen === gender2){ //gender matches selected
+            heatmapdatapoints[counter] = new google.maps.LatLng(temp[1], temp[0]);
+            counter += 1;
+          }
+
+        }
+
+        heatmap.setData(heatmapdatapoints);
       }
 
     </script>

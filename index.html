@@ -52,6 +52,10 @@
           // using square brackets and a string value as its
           // "property."
           travelMode: google.maps.TravelMode[selectedMode]
+        }, function(response, status) {
+          if (status == 'OK') {
+            directionsDisplay.setDirections(response);
+          }
         });
       }
     </script>

@@ -20,9 +20,92 @@
     <b>End: </b>
     <input id="end"type="text"><br>
     </div>
+
+    <!-- <div class="dropdown">
+  <button onclick="myFunction()" class="dropbtn">Times</button>
+  <div id="myDropdown" class="dropdown-content"> -->
+    <!-- <a href="#">12:00AM-12:59AM </a>
+    <a href="#">1:00AM-1:59AM</a>
+    <a href="#">2:00AM-2:59AM</a>
+    <a href="#">3:00AM-3:59AM</a>
+    <a href="#">4:00AM-4:59AM</a>
+    <a href="#">5:00AM-5:59AM</a>
+    <a href="#">6:00AM-6:59AM</a>
+    <a href="#">7:00AM-7:59AM</a>
+    <a href="#">8:00AM-8:59AM</a>
+    <a href="#">9:00AM-9:59AM</a>
+    <a href="#">10:00AM-10:59AM </a>
+    <a href="#">11:00AM-11:59AM </a>
+    <a href="#">12:00PM-12:59PM </a>
+    <a href="#">1:00PM-1:59PM</a>
+    <a href="#">2:00PM-2:59PM</a>
+    <a href="#">3:00PM-3:59PM</a>
+    <a href="#">4:00PM-4:59PM</a>
+    <a href="#">5:00PM-5:59PM</a>
+    <a href="#">6:00PM-6:59PM</a>
+    <a href="#">7:00PM-7:59PM</a>
+    <a href="#">8:00PM-8:59PM</a>
+    <a href="#">9:00PM-9:59PM</a>
+    <a href="#">10:00PM-10:59PM </a>
+    <a href="#">11:00PM-11:59PM </a>
+    <a href="#">erjghqiwuefhqiwuefh</a> -->
+
+    <b>Time of Travel: </b>
+    <select id="Time of Travel">
+      <option value="0000">12:00AM-12:59AM</option>
+      <option value="0100">1:00AM-1:59AM</option>
+      <option value="0200">2:00AM-2:59AM</option>
+      <option value="0300">3:00AM-3:59AM</option>
+      <option value="0400">4:00AM-4:59AM</option>
+      <option value="0500">5:00AM-5:59AM</option>
+      <option value="0600">6:00AM-6:59AM</option>
+      <option value="0700">7:00AM-7:59AM</option>
+      <option value="0800">8:00AM-8:59AM</option>
+      <option value="0900">9:00AM-9:59AM</option>
+      <option value="1000">10:00AM-10:59AM</option>
+      <option value="1100">11:00AM-11:59AM</option>
+      <option value="1200">12:00PM-12:59PM</option>
+      <option value="1300">1:00PM-1:59PM</option>
+      <option value="1400">2:00PM-2:59PM</option>
+      <option value="1500">3:00PM-3:59PM</option>
+      <option value="1600">4:00PM-4:59PM</option>
+      <option value="1700">5:00PM-5:59PM</option>
+      <option value="1800">6:00PM-6:59PM</option>
+      <option value="1900">7:00PM-7:59PM</option>
+      <option value="2000">8:00PM-8:59PM</option>
+      <option value="2100">9:00PM-9:59PM</option>
+      <option value="2200">10:00PM-10:59PM</option>
+      <option value="2300">11:00PM-11:59PM</option>
+
+    </select>
+
+  </div>
+</div>
+
     <div id="map"></div>
     <div id="right-panel"></div>
     <script>
+
+    /* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
 
     var crimeJson = [
     {
@@ -3689,7 +3772,7 @@
         "weapon_used_cd": "307"
     }
   ]
-
+      var heatmap;
       function initMap() {
         var directionsDisplay = new google.maps.DirectionsRenderer;
         var directionsService = new google.maps.DirectionsService;
@@ -3708,7 +3791,7 @@
           console.log("Adding point: " + temp[1] + temp[0]);
           heatmapData[i] = new google.maps.LatLng(temp[1], temp[0]);
         }
-        var heatmap = new google.maps.visualization.HeatmapLayer({
+         heatmap = new google.maps.visualization.HeatmapLayer({
           data: heatmapData
         });
         heatmap.setMap(map);
@@ -3723,11 +3806,32 @@
         document.getElementById('end').addEventListener('change', function() {
           calculateAndDisplayRoute(directionsService, directionsDisplay);
         });
+        document.getElementById('Time of Travel').addEventListener('change', function() {
+          timeFilter(map);
+        });
       }
 
       // function mapCrimePins() {
       //
       // }
+      function timeFilter(map){
+        var filteredPoints = []; //array to hold new points
+        var theTime = document.getElementById("Time of Travel").value;
+        for (var i = 0; i < crimeJson.length; i++){
+          var time = crimeJson[i]["time_occ"];
+          var temp = crimeJson[i]["location_1"]["coordinates"];
+          if ((Math.floor(theTime/100)) == (Math.floor(time/100))){
+            console.log("Adding point: " + temp[1] + temp[0]);
+            filteredPoints[i] = new google.maps.LatLng(temp[1], temp[0]);
+          }
+        }
+        heatmap.setData(filteredPoints);
+         //check first 2 digits to see the time
+
+        heatmap.setMap(map);
+        heatmap.set('radius', heatmap.get('radius') ? null : 25);
+
+        }
 
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         var selectedMode = document.getElementById('mode').value;
@@ -3745,6 +3849,7 @@
           }
         });
       }
+
     </script>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAieiLj36sAgS86Qjqzd_EINsBYFzGN4Os&libraries=visualization&callback=initMap">

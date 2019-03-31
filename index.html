@@ -3689,9 +3689,6 @@
     }
   ]
 
-
-
-
       function initMap() {
         var directionsDisplay = new google.maps.DirectionsRenderer;
         var directionsService = new google.maps.DirectionsService;
@@ -3700,6 +3697,16 @@
           center: {lat: 37.77, lng: -122.447}
         });
         directionsDisplay.setMap(map);
+        var heatmapData = [];
+        for (var i = 0; i < crimeJson.length; i++) {
+          var temp = crimeJson[i]["location_1"]["coordinates"];
+          console.log("Adding point: " + temp[1] + temp[0]);
+          heatmapData[i] = new google.maps.LatLng(temp[1], temp[0]);
+        }
+        var heatmap = new google.maps.visualization.HeatmapLayer({
+          data: heatmapData
+        });
+        heatmap.setMap(map);
 
         calculateAndDisplayRoute(directionsService, directionsDisplay);
         document.getElementById('mode').addEventListener('change', function() {
@@ -3713,9 +3720,9 @@
         });
       }
 
-      function mapCrimePins() {
-
-      }
+      // function mapCrimePins() {
+      //
+      // }
 
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         var selectedMode = document.getElementById('mode').value;
@@ -3733,8 +3740,8 @@
         });
       }
     </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAieiLj36sAgS86Qjqzd_EINsBYFzGN4Os&callback=initMap&libraries=visualization">
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAieiLj36sAgS86Qjqzd_EINsBYFzGN4Os&libraries=visualization&callback=initMap">
     </script>
   </body>
 </html>

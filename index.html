@@ -3689,6 +3689,7 @@
         "weapon_used_cd": "307"
     }
   ]
+      var crimePoints = [];
 
       function initMap() {
         var directionsDisplay = new google.maps.DirectionsRenderer;
@@ -3702,14 +3703,13 @@
         var control = document.getElementById('floating-panel');
         control.style.display = 'block';
         map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
-        var heatmapData = [];
         for (var i = 0; i < crimeJson.length; i++) {
           var temp = crimeJson[i]["location_1"]["coordinates"];
-          console.log("Adding point: " + temp[1] + temp[0]);
-          heatmapData[i] = new google.maps.LatLng(temp[1], temp[0]);
+          crimePoints[i] = new google.maps.LatLng(temp[1], temp[0]);
         }
         var heatmap = new google.maps.visualization.HeatmapLayer({
-          data: heatmapData
+          data: crimePoints,
+          radius: 20
         });
         heatmap.setMap(map);
 
@@ -3725,9 +3725,6 @@
         });
       }
 
-      // function mapCrimePins() {
-      //
-      // }
 
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         var selectedMode = document.getElementById('mode').value;
@@ -3741,6 +3738,24 @@
           provideRouteAlternatives: true
         }, function(response, status) {
           if (status == 'OK') {
+            for (var i = 0; i < response.routes.length; i++) {
+              var myRoute = response.routes[i].legs[0];
+              var crimeCounter = 0;
+              var totalCounter = 0;
+              for (var j = 0; j < myRoute.steps.length; j++) {
+    	            for (var k = 0; k < myRoute.steps[j].path.length; k++) {
+                    for (var l = 0; l < crimePoints.length; l++) {
+                     // console.log("Comparing route point: " + myRoute.steps[j].path[k].toString() + " with crime point: " + crimePoints[l].toString());
+                     //console.log("Latitude difference: " + Math.abs(myRoute.steps[j].path[k].lat() - crimePoints[l].lat()) + ", Longitude difference: " + Math.abs(myRoute.steps[j].path[k].lng() - crimePoints[l].lng()));
+                     if (Math.abs(myRoute.steps[j].path[k].lat() - crimePoints[l].lat()) <= 0.0005 && Math.abs(myRoute.steps[j].path[k].lng() - crimePoints[l].lng()) <= 0.0005) {
+                       crimeCounter += 1;
+                     }
+                    }
+                    totalCounter += 1;
+                  }
+              }
+              console.log("Crime counter:" + crimeCounter + " , total Counter: " + totalCounter);
+            }
             directionsDisplay.setDirections(response);
           }
         });

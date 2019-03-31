@@ -60,9 +60,6 @@
       </select>
     </div>
 
-  </div>
-</div>
-
     <div id="map"></div>
 
 
@@ -109,27 +106,24 @@
           document.getElementById('right-panel').style.opacity = 1;
         });
         document.getElementById('Time of Travel').addEventListener('change', function() {
-          timeFilter(map);
+          timeFilter();
         });
       }
 
-      function timeFilter(map){
+      function timeFilter(){
         var filteredPoints = []; //array to hold new points
         var theTime = document.getElementById("Time of Travel").value;
+        var counter = 0;
         for (var i = 0; i < crimeJson.length; i++){
           var time = crimeJson[i]["time_occ"];
           var temp = crimeJson[i]["location_1"]["coordinates"];
           if ((Math.floor(theTime/100)) == (Math.floor(time/100))){
-            console.log("Adding point: " + temp[1] + temp[0]);
-            filteredPoints[i] = new google.maps.LatLng(temp[1], temp[0]);
+            filteredPoints[counter++] = new google.maps.LatLng(temp[1], temp[0]);
+            counter += 1;
           }
         }
+
         heatmap.setData(filteredPoints);
-         //check first 2 digits to see the time
-
-        heatmap.setMap(map);
-        heatmap.set('radius', heatmap.get('radius') ? null : 25);
-
         }
 
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {

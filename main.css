@@ -15,11 +15,17 @@ html, body {
   min-height: 100%;
 }
 
+#description {
+  position: absolute;
+  font-size: 16px;
+  top: 60%;
+  left: 13.5%;
+}
 /* The hero image */
 .hero-image {
   height: 17%;
-
   position: relative;
+  width: 100%;
 }
 
 /* Place text in the middle of the image */
@@ -57,6 +63,7 @@ html, body {
   line-height: 30px;
   padding-left: 10px;
 }
+
 #right-panel {
   font-family: 'Roboto','sans-serif';
   line-height: 30px;

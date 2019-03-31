@@ -3,35 +3,79 @@
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <title>Travel Modes in Directions</title>
+    <title>SafeWalk</title>
     <link rel='stylesheet' href='main.css'/>
-    <script type="text/javascript" src="crime.json"></script>
+    <script type="text/javascript" src="crime.js"></script>
   </head>
   <body>
-    <div id="floating-panel">
-    <b>Mode of Travel: </b>
-    <select id="mode">
-      <option value="DRIVING">Driving</option>
-      <option value="WALKING">Walking</option>
-      <option value="BICYCLING">Bicycling</option>
-      <option value="TRANSIT">Transit</option>
-    </select>
-    <b>Gender: </b>
-    <select id = "genderlist">
-      <option value = "0">Both</option>
-      <option value = "M">Male</option>
-      <option value = "F">Female</option>
-    </select><br>
-
-    <b>Start: </b>
-    <input id="start"type="text">
-    <b>End: </b>
-    <input id="end"type="text"><br>
+    <video autoplay muted loop id="myVideo">
+      <source src="assets/videoplayback.mp4" type="video/mp4">
+    </video>
+    <div class="hero-image">
+      <div class="hero-text">
+        <h1>SafeWalk</h1>
+        <p id = "description">Finding the safest way home.</p>
+      </div>
     </div>
-    <div id="map"></div>
-    <div id="right-panel"></div>
-    <script>
 
+    <div id="floating-panel">
+      <b>Mode of Travel: </b>
+      <select id="mode">
+        <option value="DRIVING">Driving</option>
+        <option value="WALKING">Walking</option>
+        <option value="BICYCLING">Bicycling</option>
+        <option value="TRANSIT">Transit</option>
+      </select>
+      <b>Gender: </b>
+      <select id = "genderlist">
+        <option value = "0">Both</option>
+        <option value = "M">Male</option>
+        <option value = "F">Female</option>
+      </select><br>
+      <b>Start: </b>
+      <input id="start"type="text"><br>
+      <b>End: </b>
+      <input id="end"type="text"><br>
+      <b>Time of Travel: </b>
+      <select id="Time of Travel">
+        <option value="0000">12:00AM-12:59AM</option>
+        <option value="0100">1:00AM-1:59AM</option>
+        <option value="0200">2:00AM-2:59AM</option>
+        <option value="0300">3:00AM-3:59AM</option>
+        <option value="0400">4:00AM-4:59AM</option>
+        <option value="0500">5:00AM-5:59AM</option>
+        <option value="0600">6:00AM-6:59AM</option>
+        <option value="0700">7:00AM-7:59AM</option>
+        <option value="0800">8:00AM-8:59AM</option>
+        <option value="0900">9:00AM-9:59AM</option>
+        <option value="1000">10:00AM-10:59AM</option>
+        <option value="1100">11:00AM-11:59AM</option>
+        <option value="1200">12:00PM-12:59PM</option>
+        <option value="1300">1:00PM-1:59PM</option>
+        <option value="1400">2:00PM-2:59PM</option>
+        <option value="1500">3:00PM-3:59PM</option>
+        <option value="1600">4:00PM-4:59PM</option>
+        <option value="1700">5:00PM-5:59PM</option>
+        <option value="1800">6:00PM-6:59PM</option>
+        <option value="1900">7:00PM-7:59PM</option>
+        <option value="2000">8:00PM-8:59PM</option>
+        <option value="2100">9:00PM-9:59PM</option>
+        <option value="2200">10:00PM-10:59PM</option>
+        <option value="2300">11:00PM-11:59PM</option>
+
+      </select>
+    </div>
+
+  </div>
+</div>
+
+    <div id="map"></div>
+
+
+    <div id="right-panel"><h3>Directions</h3></div>
+
+    <script>
+      var crimePoints = [];
       var heatmap;
       function initMap() {
         var directionsDisplay = new google.maps.DirectionsRenderer;
@@ -41,18 +85,21 @@
           center: {lat: 34.0472, lng: -118.3370}
         });
         directionsDisplay.setMap(map);
+
         directionsDisplay.setPanel(document.getElementById('right-panel'));
         var control = document.getElementById('floating-panel');
         control.style.display = 'block';
+
         map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
-        var heatmapData = [];
         for (var i = 0; i < crimeJson.length; i++) {
           var temp = crimeJson[i]["location_1"]["coordinates"];
-          heatmapData[i] = new google.maps.LatLng(temp[1], temp[0]);
+          crimePoints[i] = new google.maps.LatLng(temp[1], temp[0]);
         }
+
         heatmap = new google.maps.visualization.HeatmapLayer({
-          data: heatmapData
+          data: crimePoints,
         });
+
         heatmap.setMap(map);
         heatmap.set('radius', heatmap.get('radius') ? null : 25);
 
@@ -65,10 +112,30 @@
         });
         document.getElementById('end').addEventListener('change', function() {
           calculateAndDisplayRoute(directionsService, directionsDisplay);
+          document.getElementById('right-panel').style.opacity = 1;
+        });
+        document.getElementById('Time of Travel').addEventListener('change', function() {
+          timeFilter(map);
         });
         document.getElementById('genderlist').addEventListener('change', function() {
           genderdata();
         });
+      }
+
+      function timeFilter(map){
+        var filteredPoints = []; //array to hold new points
+        var theTime = document.getElementById("Time of Travel").value;
+        for (var i = 0; i < crimeJson.length; i++){
+          var time = crimeJson[i]["time_occ"];
+          var temp = crimeJson[i]["location_1"]["coordinates"];
+          if ((Math.floor(theTime/100)) == (Math.floor(time/100))){
+            console.log("Adding point: " + temp[1] + temp[0]);
+            filteredPoints[i] = new google.maps.LatLng(temp[1], temp[0]);
+          }
+        }
+        heatmap.setData(filteredPoints);
+        heatmap.setMap(map);
+        heatmap.set('radius', heatmap.get('radius') ? null : 25);
       }
 
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
@@ -83,6 +150,24 @@
           provideRouteAlternatives: true
         }, function(response, status) {
           if (status == 'OK') {
+            for (var i = 0; i < response.routes.length; i++) {
+              var myRoute = response.routes[i].legs[0];
+              var crimeCounter = 0;
+              var totalCounter = 0;
+              for (var j = 0; j < myRoute.steps.length; j++) {
+    	            for (var k = 0; k < myRoute.steps[j].path.length; k++) {
+                    for (var l = 0; l < crimePoints.length; l++) {
+                     // console.log("Comparing route point: " + myRoute.steps[j].path[k].toString() + " with crime point: " + crimePoints[l].toString());
+                     //console.log("Latitude difference: " + Math.abs(myRoute.steps[j].path[k].lat() - crimePoints[l].lat()) + ", Longitude difference: " + Math.abs(myRoute.steps[j].path[k].lng() - crimePoints[l].lng()));
+                     if (Math.abs(myRoute.steps[j].path[k].lat() - crimePoints[l].lat()) <= 0.0005 && Math.abs(myRoute.steps[j].path[k].lng() - crimePoints[l].lng()) <= 0.0005) {
+                       crimeCounter += 1;
+                     }
+                    }
+                    totalCounter += 1;
+                  }
+              }
+              console.log("Crime counter:" + crimeCounter + " , total Counter: " + totalCounter);
+            }
             directionsDisplay.setDirections(response);
           }
         });

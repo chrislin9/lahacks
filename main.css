@@ -47,7 +47,7 @@ html, body {
 #map {
   left: 3%;
   height: 80%;
-  margin-right: 400px;
+  width: 72%;
 }
 
 #floating-panel {
@@ -70,7 +70,7 @@ html, body {
   padding-left: 10px;
   z-index: 5;
   position: absolute;
-  right: 3%;
+  left: 75%;
   top: 17%;
   height: 80%;
   width: 22%;

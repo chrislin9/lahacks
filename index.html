@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title>Travel Modes in Directions</title>
     <link rel='stylesheet' href='main.css'/>
-    <script type="text/javascript" src="crime.json"></script>
+    <script type="text/javascript" src="crime.js"></script>
   </head>
   <body>
     <div id="floating-panel">
@@ -32,16 +32,17 @@
           center: {lat: 34.0522, lng: -118.2437}
         });
         directionsDisplay.setMap(map);
+
         directionsDisplay.setPanel(document.getElementById('right-panel'));
         var control = document.getElementById('floating-panel');
         control.style.display = 'block';
+
         map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
-        var heatmapData = [];
-        for (var i = 0; i < crimeJson.length; i++) {
-          var temp = crimeJson[i]["location_1"]["coordinates"];
-          console.log("Adding point: " + temp[1] + temp[0]);
-          heatmapData[i] = new google.maps.LatLng(temp[1], temp[0]);
-        }
+        var heatmapData = crimeJson.map(function(crime) {
+          latitude = crime['location_1']['coordinates'][1];
+          longitude = crime['location_1']['coordinates'][0];
+          return new google.maps.LatLng(latitude, longitude);
+        })
         var heatmap = new google.maps.visualization.HeatmapLayer({
           data: heatmapData
         });

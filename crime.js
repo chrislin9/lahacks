@@ -1,4 +1,4 @@
-[
+var crimeJson = [
     {
         ":@computed_region_2dna_qi2s": "26",
         ":@computed_region_k96s_3jcv": "626",

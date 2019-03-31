@@ -21,6 +21,7 @@
     <input id="end"type="text"><br>
     </div>
     <div id="map"></div>
+    <div id="right-panel"></div>
     <script>
       function initMap() {
         var directionsDisplay = new google.maps.DirectionsRenderer;
@@ -30,6 +31,11 @@
           center: {lat: 37.77, lng: -122.447}
         });
         directionsDisplay.setMap(map);
+        directionsDisplay.setPanel(document.getElementById('right-panel'));
+
+        var control = document.getElementById('floating-panel');
+        control.style.display = 'block';
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
 
         calculateAndDisplayRoute(directionsService, directionsDisplay);
         document.getElementById('mode').addEventListener('change', function() {
@@ -51,7 +57,8 @@
           // Note that Javascript allows us to access the constant
           // using square brackets and a string value as its
           // "property."
-          travelMode: google.maps.TravelMode[selectedMode]
+          travelMode: google.maps.TravelMode[selectedMode],
+          provideRouteAlternatives: true
         }, function(response, status) {
           if (status == 'OK') {
             directionsDisplay.setDirections(response);

@@ -136,17 +136,17 @@
         });
         document.getElementById('Time of Travel').addEventListener('change', function() {
           filterData();
-          var hello = directionsDisplay.getDirections().routes;
-          for (var i = 0; i < hello.length; i++) {
-            updateECV(hello[i].legs[0], i);
+          var routes = directionsDisplay.getDirections().routes;
+          for (var i = 0; i < routes.length; i++) {
+            updateECV(routes[i].legs[0], i);
           }
           document.getElementById('ecv').value = ecv[directionsDisplay.getRouteIndex()];
         });
         document.getElementById('genderlist').addEventListener('change', function() {
           filterData();
-          var hello = directionsDisplay.getDirections().routes;
-          for (var i = 0; i < hello.length; i++) {
-            updateECV(hello[i].legs[0], i);
+          var routes = directionsDisplay.getDirections().routes;
+          for (var i = 0; i < routes.length; i++) {
+            updateECV(routes[i].legs[0], i);
           }
           document.getElementById('ecv').value = ecv[directionsDisplay.getRouteIndex()];
         });

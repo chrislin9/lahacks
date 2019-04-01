@@ -140,6 +140,7 @@
           for (var i = 0; i < hello.length; i++) {
             updateECV(hello[i].legs[0], i);
           }
+          document.getElementById('ecv').value = ecv[directionsDisplay.getRouteIndex()];
         });
         document.getElementById('genderlist').addEventListener('change', function() {
           filterData();
@@ -147,6 +148,7 @@
           for (var i = 0; i < hello.length; i++) {
             updateECV(hello[i].legs[0], i);
           }
+          document.getElementById('ecv').value = ecv[directionsDisplay.getRouteIndex()];
         });
       }
 
@@ -209,7 +211,7 @@
         for (var j = 0; j < route.steps.length; j++) {
             for (var k = 0; k < route.steps[j].path.length; k++) {
               for (var l = 0; l < filteredPoints.length; l++) {
-               if (Math.abs(route.steps[j].path[k].lat() - filteredPoints[l].lat()) <= 0.0005 && Math.abs(route.steps[j].path[k].lng() - filteredPoints[l].lng()) <= 0.0005) {
+               if (Math.abs(route.steps[j].path[k].lat() - filteredPoints[l].lat()) <= 0.0001 && Math.abs(route.steps[j].path[k].lng() - filteredPoints[l].lng()) <= 0.0001) {
                  crimeCounter += 1;
                }
               }

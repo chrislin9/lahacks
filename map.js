@@ -39,15 +39,20 @@ function initMap() {
     document.getElementById('ecv').value = ecv[directionsDisplay.getRouteIndex()];
   });
 
-  calculateAndDisplayRoute(directionsService, directionsDisplay);
   document.getElementById('mode').addEventListener('change', function() {
-    calculateAndDisplayRoute(directionsService, directionsDisplay);
+    if (document.getElementById('start').value && document.getElementById('end')) {
+      calculateAndDisplayRoute(directionsService, directionsDisplay);
+    }
   });
   document.getElementById('start').addEventListener('change', function() {
-    calculateAndDisplayRoute(directionsService, directionsDisplay);
+    if (document.getElementById('end').value) {
+      calculateAndDisplayRoute(directionsService, directionsDisplay);
+    }
   });
   document.getElementById('end').addEventListener('change', function() {
-    calculateAndDisplayRoute(directionsService, directionsDisplay);
+    if (document.getElementById('start').value) {
+      calculateAndDisplayRoute(directionsService, directionsDisplay);
+    }
     document.getElementById('right-panel').style.opacity = 1;
   });
   document.getElementById('Time of Travel').addEventListener('change', function() {
@@ -99,8 +104,11 @@ function filterData() {
 }
 
 function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-  console.log("changed2");
   var selectedMode = document.getElementById('mode').value;
+  console.log("listener initiated. selected mode " + selectedMode);
+  if (document.getElementById('start').value && document.getElementById('end').value) {
+    console.log("start: " + document.getElementById('start').value + ", end: " + document.getElementById('end').value)
+  }
   directionsService.route({
     origin: document.getElementById('start').value,
     destination: document.getElementById('end').value,
@@ -111,12 +119,15 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     provideRouteAlternatives: true
   }, function(response, status) {
     if (status == 'OK') {
+      console.log("directions status ok");
       for (var i = 0; i < response.routes.length; i++) {
         var myRoute = response.routes[i].legs[0];
         updateECV(myRoute, i);
       }
       directionsDisplay.setDirections(response);
       console.log("changed");
+    } else {
+      console.log('Directions request failed due to ' + status);
     }
   });
 }

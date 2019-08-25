@@ -45,7 +45,6 @@ html, body {
 /* Always set the map height explicitly to define the size of the div
  * element that contains the map. */
 #map {
-  z-index: 100;
   left: 3%;
   height: 80%;
   width: 72%;

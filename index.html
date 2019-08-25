@@ -7,6 +7,7 @@
     <link rel='stylesheet' href='main.css'/>
   </head>
   <body>
+    <div id="map"></div>
     <video autoplay muted loop id="myVideo">
       <source src="assets/videoplayback.mp4" type="video/mp4">
     </video>
@@ -52,7 +53,6 @@
         <option value="2100">9:00PM-9:59PM</option>
         <option value="2200">10:00PM-10:59PM</option>
         <option value="2300">11:00PM-11:59PM</option>
-
       </select>
 
       <b>Gender: </b>
@@ -71,14 +71,12 @@
       <input id="ecv"type="text"readonly><br>
     </div>
 
-    <div id="map"></div>
-
     <div id="right-panel"><h3>Directions</h3></div>
 
     <script type="text/javascript" src="crime.js"></script>
     <script type="text/javascript" src="map.js"></script>
     <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAieiLj36sAgS86Qjqzd_EINsBYFzGN4Os&libraries=visualization&callback=initMap">
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCquP-69CCjXDhu4xDVaYLungkJ8aZDWWo&libraries=visualization&callback=initMap">
     </script>
   </body>
 </html>
